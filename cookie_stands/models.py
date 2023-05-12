@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+import random
+import math
 # Create your models here.
 
 class CookieStand(models.Model):
@@ -9,9 +11,12 @@ class CookieStand(models.Model):
     hourly_sales = models.JSONField(default=list, null=True)
     minimum_customers_per_hour = models.IntegerField(default=0)
     maximum_customers_per_hour = models.IntegerField(default=0)
-    average_cookies_per_sale = models.FloatField(default=0)
+    average_cookies_per_sale = models.IntegerField(default=0)
 
     objects = models.Manager()
 
     def __str__(self):
         return self.location
+
+
+

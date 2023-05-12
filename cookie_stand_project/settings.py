@@ -15,12 +15,24 @@ import environ
 
 env = environ.Env(
     DEBUG=(bool, False),
+    ENVIRONMENT=(str, "PRODUCTION"),
+    ALLOW_ALL_ORIGINS=(bool, False),
+    ALLOWED_HOSTS=(list, []),
+    ALLOWED_ORIGINS=(list, []),
+    CSRF_TRUSTED_ORIGINS=(list, []),  # lab 39
+    # DATABASE_ENGINE=(str, "django.db.backends.sqlite3"),
+    # DATABASE_NAME=(str, BASE_DIR / "db.sqlite3"),
+    # DATABASE_USER=(str, ""),
+    # DATABASE_PASSWORD=(str, ""),
+    # DATABASE_HOST=(str, ""),
+    # DATABASE_PORT=(int, 5432),
 )
 
 environ.Env.read_env()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+ENVIRONMENT = env.str('ENVIRONMENT')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -49,7 +61,8 @@ INSTALLED_APPS = [
     "cookie_stands",
     # 3rd Party 
     "rest_framework",
-    "whitenoise"
+    "whitenoise",
+    "corsheaders"
 ]
 
 MIDDLEWARE = [
@@ -60,7 +73,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware"
+    "whitenoise.middleware.WhiteNoiseMiddleware",
+    "corsheaders.middleware.CorsMiddleware"
 ]
 
 ROOT_URLCONF = "cookie_stand_project.urls"
@@ -89,8 +103,12 @@ WSGI_APPLICATION = "cookie_stand_project.wsgi.application"
 
 # DATABASES = {
 #     "default": {
-#         "ENGINE": "django.db.backends.sqlite3",
-#         "NAME": BASE_DIR / "db.sqlite3",
+#         "ENGINE": env.str("DATABASE_ENGINE"),
+#         "NAME": BASE_DIR/ "db.sqlite3",
+#         "USER": env.str("DATABASE_USER"),
+#         "PASSWORD": env.str("DATABASE_PASSWORD"),
+#         "HOST": env.str("DATABASE_HOST"),
+#         "PORT": env.int("DATABASE_PORT"),
 #     }
 # }
 
@@ -158,3 +176,12 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication'
     ],
 }
+
+# Needed to allow requests from cross-origin
+CSRF_TRUSTED_ORIGINS = tuple(env.list('CSRF_TRUSTED_ORIGINS'))
+
+CORS_ALLOW_ALL_ORIGINS = env.bool("ALLOW_ALL_ORIGINS")
+CORS_ALLOWED_ORIGINS = [ 'http://localhost:3000', ]
+CORS_ALLOWED_METHODS = [ 'GET', 'POST', 'DELETE' ]
+CORS_ALLOWED_HEADERS = [ 'X-CSRFToken', 'Content-Type', ]
+CORS_ORIGIN_WHITELIST = tuple(env.list("ALLOWED_ORIGINS"))

@@ -3,6 +3,10 @@
 Django application using Django Rest Frameworks API Views and JWT authentication. Using Docker as containerization. 
 Using Postgresql as database and deploying DB to ElephantSQL
 
+## Production Deployment
+
+[Cookie Stand API](https://cookie-stand-api-eta.vercel.app/)
+
 ## Set up
 ```
 $ python3 -m venv .venv
